@@ -2,6 +2,11 @@
   "hints": [],
   "groups": [
     {
+      "sourceType": "camt.cbsd.lab05.config.DataLoader",
+      "name": "server",
+      "type": "camt.cbsd.lab05.config.DataLoader"
+    },
+    {
       "sourceType": "camt.cbsd.lab05.service.StudentServiceImpl",
       "name": "server",
       "type": "camt.cbsd.lab05.service.StudentServiceImpl"
@@ -10,11 +15,6 @@
       "sourceType": "camt.cbsd.lab05.dao.StudentDaoImpl",
       "name": "server",
       "type": "camt.cbsd.lab05.dao.StudentDaoImpl"
-    },
-    {
-      "sourceType": "camt.cbsd.lab05.config.DataLoader",
-      "name": "server",
-      "type": "camt.cbsd.lab05.config.DataLoader"
     }
   ],
   "properties": [

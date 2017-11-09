@@ -4,6 +4,11 @@ import camt.cbsd.lab05.dao.CourseDao;
 import camt.cbsd.lab05.dao.StudentDao;
 import camt.cbsd.lab05.entity.Course;
 import camt.cbsd.lab05.entity.Student;
+import camt.cbsd.lab05.entity.security.Authority;
+import camt.cbsd.lab05.entity.security.AuthorityName;
+import camt.cbsd.lab05.entity.security.User;
+import camt.cbsd.lab05.security.repository.AuthorityRepository;
+import camt.cbsd.lab05.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -11,11 +16,29 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
 
 @ConfigurationProperties(prefix = "server")
 @Component
 public class DataLoader implements ApplicationRunner {
     StudentDao studentDao;
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Autowired
+    UserRepository userRepository;
+
+    public void setAuthorityRepository(AuthorityRepository authorityRepository) {
+        this.authorityRepository = authorityRepository;
+    }
+
+    @Autowired
+    AuthorityRepository authorityRepository;
 
     @Autowired
     public void setStudentDao(StudentDao studentDao) {
@@ -70,9 +93,56 @@ public class DataLoader implements ApplicationRunner {
         student3.addCourse(course1);
         student3.addCourse(course3);
 
+        securitySetup();
+    }
+    public void securitySetup() {
+        User user1 = User.builder()
+                .username("admin")
+                .password("admin")
+                .firstname("admin")
+                .lastname("admin")
+                .email("admin@admin.com")
+                .enabled(true)
+                .lastPasswordResetDate(Date.from(LocalDate.of(2016,01,01).atStartOfDay(ZoneId.systemDefault()).toInstant()))
+                .build();
+
+        User user2 = User.builder()
+                .username("user")
+                .password("user")
+                .firstname("user")
+                .lastname("user")
+                .email("enabled@user.com")
+                .enabled(true)
+                .lastPasswordResetDate(Date.from(LocalDate.of(2016,01,01).atStartOfDay(ZoneId.systemDefault()).toInstant()))
+                .build();
+        User user3 = User.builder()
+                .username("disabled")
+                .password("disabled")
+                .firstname("user")
+                .lastname("user")
+                .email("disabled@user.com")
+                .enabled(false)
+                .lastPasswordResetDate(Date.from(LocalDate.of(2016,01,01).atStartOfDay(ZoneId.systemDefault()).toInstant()))
+                .build();
+        Authority auth1=
+                Authority.builder().name(AuthorityName.ROLE_USER).build();
+        Authority auth2=
+                Authority.builder().name(AuthorityName.ROLE_ADMIN).build();
+        authorityRepository.save(auth1);
+        authorityRepository.save(auth2);
+
+        user1.setAuthorities(new ArrayList<>());
+        user1.getAuthorities().add(auth1);
+        user1.getAuthorities().add(auth2);
+        user2.setAuthorities(new ArrayList<>());
+        user2.getAuthorities().add(auth1);
+        user3.setAuthorities(new ArrayList<>());
+        user3.getAuthorities().add(auth1);
+
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
 
     }
 
 }
-
-
