@@ -16,6 +16,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.multipart.support.MultipartFilter;
+
+import javax.servlet.ServletContext;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Configurable
@@ -52,10 +57,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/student").hasRole("ADMIN")
                 .antMatchers("/auth/**","/h2-console/**","/refresh","/images/**").permitAll()
                 .anyRequest().authenticated();
         httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
         httpSecurity.headers().cacheControl();
+    }
+
+    @Bean
+    public WebApplicationInitializer setMultipartFilter(){
+        return new AbstractSecurityWebApplicationInitializer() {
+            @Override
+            protected void beforeSpringSecurityFilterChain(ServletContext servletContext) {
+               insertFilters(servletContext,new MultipartFilter());
+            }
+        };
     }
 
 }

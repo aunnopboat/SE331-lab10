@@ -24,7 +24,7 @@ export class StudentsDataServerService {
 
   getStudent(id: number) {
     let student:Student;
-    return this.http.get('http://localhost:8080/student/'+id)
+    return this.http.get('http://localhost:8080/student/'+id,{headers: this.headers})
       .map((res:Response) => {
         if (res){
           if (res.status === 200){
@@ -41,11 +41,13 @@ export class StudentsDataServerService {
     const formData = new FormData();
     let fileName: string;
     formData.append('file', file);
-    return this.http.post('http://localhost:8080/upload', formData)
+    let header = new Headers({'Authorization': 'Bearer ' + this.authenticationService.getToken()});
+    let options = new RequestOptions({headers: header});
+    return this.http.post('http://localhost:8080/upload', formData,options)
       .flatMap(filename => {
         student.image = filename.text();
         let headers = new Headers({'Content-Type': 'application/json'});
-        let options = new RequestOptions({headers: headers, method: 'post'});
+        let options = new RequestOptions({headers:this.headers});
         let body = JSON.stringify(student);
         return this.http.post('http://localhost:8080/student', body, options)
           .map(res => {

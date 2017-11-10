@@ -1,6 +1,6 @@
 <div class="row" *ngIf="result === 'addSuccess'">
   <div class="alert alert-success" role="alert">
-    <strong>Well done!!</strong> Add new Student Success
+    <strong>Well done!!</strong> Add new Course Success
   </div>
 </div>
 <div class="row">
@@ -21,7 +21,7 @@
     <tr *ngFor="let course of courses; let i = index">
       <td>{{i+1}}</td>
       <td>{{course.courseId}}</td>
-      <td>{{course.courseName}}</td>
+      <td>{{course.coursename}}</td>
     </tr>
     </tbody>
   </table>

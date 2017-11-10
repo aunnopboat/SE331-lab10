@@ -24,10 +24,12 @@ public class CourseController {
         this.courseService = courseService;
     }
 
+    @CrossOrigin
     @GetMapping("/course")
     public ResponseEntity<?> list(){
         return ResponseEntity.ok(courseService.list());
     }
+
 
     @PostMapping("/course")
     public ResponseEntity<?> add(@RequestBody Course course){

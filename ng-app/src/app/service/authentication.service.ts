@@ -15,6 +15,7 @@ export class AuthenticationService {
         let token=response.json()&&(response.json() as any).token;
         if(token){
           localStorage.setItem('currentUser',JSON.stringify({username:username,token:token}));
+          return true;
         }else {
           return false;
         }
