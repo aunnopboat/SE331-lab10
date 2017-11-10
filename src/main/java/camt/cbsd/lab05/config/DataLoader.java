@@ -26,18 +26,19 @@ import java.util.Date;
 public class DataLoader implements ApplicationRunner {
     StudentDao studentDao;
 
+    @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    @Autowired
     UserRepository userRepository;
 
+    @Autowired
     public void setAuthorityRepository(AuthorityRepository authorityRepository) {
         this.authorityRepository = authorityRepository;
     }
 
-    @Autowired
+
     AuthorityRepository authorityRepository;
 
     @Autowired

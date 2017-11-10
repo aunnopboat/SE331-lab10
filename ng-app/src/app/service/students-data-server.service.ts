@@ -4,16 +4,21 @@ import {Http, RequestOptions, Headers,Response} from '@angular/http';
 import {StudentsDataService} from './students-data.service';
 import {Observable} from 'rxjs/Observable';
 import "rxjs/add/operator/mergeMap";
+import {AuthenticationService} from './authentication.service';
 
 @Injectable()
 export class StudentsDataServerService {
-  constructor(private http: Http) {
-
+  constructor(private http: Http, private authenticationService: AuthenticationService) {
   }
+
+  private headers = new Headers({
+    'Content-type': 'application/json',
+    'Authorization': 'Bearer '+ this.authenticationService.getToken()
+  });
 
   getStudentsData() {
     let studentArray: Student[];
-    return this.http.get('http://localhost:8080/student')
+    return this.http.get('http://localhost:8080/student',{headers: this.headers})
       .map(res => res.json());
   }
 

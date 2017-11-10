@@ -31,6 +31,7 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+    @CrossOrigin
     @GetMapping("/student")
     public ResponseEntity<?> getStudents() {
 
